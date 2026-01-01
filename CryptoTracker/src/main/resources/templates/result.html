@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Crypto Prices</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- 1. RESET & SHARED STYLES --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Animated Background */
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Float Animation */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        body {
+            /* Same Deep Space Theme */
+            background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #141E30);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* --- 2. DECORATIVE ORBS --- */
+        body::before, body::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        body::before {
+            width: 300px;
+            height: 300px;
+            background: rgba(138, 43, 226, 0.2);
+            top: -50px;
+            left: -50px;
+        }
+
+        body::after {
+            width: 400px;
+            height: 400px;
+            background: rgba(0, 255, 255, 0.1);
+            bottom: -100px;
+            right: -100px;
+            animation-delay: -3s;
+        }
+
+        /* --- 3. GLASS CARD CONTAINER --- */
+        .container {
+            position: relative;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            border-left: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 800px; /* Wider for the table */
+            text-align: center;
+        }
+
+        h2 {
+            font-weight: 700;
+            margin-bottom: 30px;
+            font-size: 32px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: linear-gradient(to right, #f7971e, #ffd200);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- 4. TABLE STYLING --- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+
+        thead {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 500;
+            text-transform: uppercase;
+            font-size: 14px;
+            color: #aaa;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 18px;
+            font-weight: 300;
+        }
+
+        /* Table Row Hover Effect */
+        tbody tr {
+            transition: background 0.3s ease;
+        }
+
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Highlight the Coin Name */
+        td:first-child {
+            font-weight: 700;
+            color: #00C9FF; /* Cyan Highlight */
+            text-transform: capitalize;
+        }
+
+        /* --- 5. BACK BUTTON --- */
+        .btn-back {
+            display: inline-block;
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background: #fff;
+            color: #000;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Live Crypto Prices</h2>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Coin Name</th>
+            <th>Current Price ($)</th>
+            <th>24H Change (%)</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="coin:${coins}">
+            <td th:text="${coin.name}">Bitcoin</td>
+            <td th:text="${coin.price}">$45,000</td>
+
+            <td th:style="${#strings.contains(coin.change24H, '-')} ? 'color: #ff4b4b;' : 'color: #00e676;'"
+                th:text="${coin.change24H}">+5.4%</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a href="/" class="btn-back">← Search Another</a>
+</div>
+
+</body>
+</html>
